@@ -17,17 +17,26 @@
       <h2>Choose Your Ticket</h2>
 
       <div class="grid">
-        <div 
-          class="card" 
-          v-for="ticket in tickets" 
+        <div
+          class="card"
+          v-for="ticket in tickets"
           :key="ticket.title"
           @click="ticket.flip = !ticket.flip"
         >
+
           <!-- FRONT -->
           <div v-if="!ticket.flip" class="front">
             <img :src="ticket.image" />
             <h3>{{ ticket.title }}</h3>
             <p class="price">{{ ticket.price }}</p>
+
+            <button class="fav-btn" @click.stop="addFavourite(ticket)">
+               Favourite
+            </button>
+
+            <button class="notify-btn" @click.stop="notifyUser(ticket.title)">
+              Notify Me
+            </button>
           </div>
 
           <!-- BACK -->
@@ -40,8 +49,19 @@
 
             <button>Buy Now</button>
           </div>
+
         </div>
       </div>
+    </section>
+
+    <!-- FAVOURITES LIST -->
+    <section class="favourites" v-if="favourites.length > 0">
+      <h2>Your Favourite Tickets</h2>
+      <ul>
+        <li v-for="(fav, index) in favourites" :key="index">
+          {{ fav.title }} – {{ fav.price }}
+        </li>
+      </ul>
     </section>
 
   </div>
@@ -55,39 +75,48 @@ export default {
         {
           title: "Bronze Ticket",
           price: "R150",
-          image: "https://lh3.googleusercontent.com/gg-dl/ABS2GSkBfdRZq-cE1_lH4rSVwA-T73QlJJSfOWhu2MaP1ZFglyux4HX3xnjuxuYTpR1NEmNNW4sDK4RLsnvlESckYI7yin8BKihpPATsZcfd90bjWc0STCVkRE-MAEOYR27MVAcgHzgzNa6rZ4kRD3APzn68Dsd3OlF2kYJXEBbaGN4dZnVj=s1024-rj",
-          benefits: [
-            "General Entry",
-            "Live Music"
-          ],
+          image: "./images/bronze.jpg",
+          benefits: ["General Entry", "Live Music"],
           flip: false
         },
         {
           title: "Silver Ticket",
           price: "R300",
-          image: "https://lh3.googleusercontent.com/gg-dl/ABS2GSkzcFn_f7CkNL9_nB7o4IpYlKuhaBjeihdOGV5xDQW2cWEq9gsdthSBcqiJDRdDtck4AbSi_xecCpZ-DyWy-iQhj9ac8A1mYZm59wiwEMIN95vPvf6G7ywIBddD-A_ForbJZurgFj3vZE54n-VmjVKrwzWTBxs79-II_8dk1AXW2HLKoA=s1024-rj",
-          benefits: [
-            "General Entry",
-            "Live Music",
-            "Free Drink"
-          ],
+          image: "./images/silver.jpg",
+          benefits: ["General Entry", "Live Music", "Free Drink"],
           flip: false
         },
         {
           title: "Gold Ticket",
           price: "R600",
-          image: "https://lh3.googleusercontent.com/gg-dl/ABS2GSkUKWeJlPfpCAEyAESxDQfDXAOPB3G4SdshXS_lFVdMMfo3z692N7q9mkR9jKOi6vKP3_uC7nS2cxAyB9j0OgpMamNXB8aHzmykFRAoVen0WHrLcCPu-B-TnHQcPlzmCgoMuVTNmfXMpxYIzxtoa65wtoR4nkQoDej5S96snQVTrPY=s1024-rj",
-          benefits: [
-            "VIP Lounge",
-            "Backstage Access",
-            "Unlimited Meals"
-          ],
+          image: "./images/Gold.jpg",
+          benefits: ["VIP Lounge", "Backstage Access", "Unlimited Meals"],
           flip: false
         }
-      ]
+      ],
+
+      //  Store favourites here
+      favourites: []
+    };
+  },
+
+  methods: {
+    addFavourite(ticket) {
+      // Avoiding duplicating favourites
+      const exists = this.favourites.find(f => f.title === ticket.title);
+      if (!exists) {
+        this.favourites.push(ticket);
+        alert(`${ticket.title} added to favourites `);
+      } else {
+        alert(`${ticket.title} is already in your favourites.`);
+      }
+    },
+
+    notifyUser(ticketName) {
+      alert(`You will be notified when sales start for ${ticketName}!`);
     }
   }
-}
+};
 </script>
 
 <style>
@@ -167,6 +196,7 @@ body {
   padding-left: 20px;
 }
 
+/* Buttons */
 button {
   margin-top: 10px;
   padding: 10px;
@@ -178,7 +208,39 @@ button {
   border-radius: 10px;
   cursor: pointer;
 }
+
 button:hover {
   opacity: 0.8;
+}
+
+.fav-btn {
+  background: #ff4d9e;
+}
+
+.notify-btn {
+  background: #0055ff;
+}
+
+/* Favourites */
+.favourites {
+  margin-top: 40px;
+}
+
+.favourites h2 {
+  color: #ffccff;
+  margin-bottom: 10px;
+}
+
+.favourites ul {
+  list-style: none;
+  padding: 0;
+}
+
+.favourites li {
+  background: #260066;
+  padding: 10px;
+  margin: 8px auto;
+  width: 300px;
+  border-radius: 12px;
 }
 </style>
